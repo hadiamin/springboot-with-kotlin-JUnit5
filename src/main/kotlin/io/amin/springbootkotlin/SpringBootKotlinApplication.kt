@@ -1,4 +1,4 @@
-package com.example.springbootkotlin
+package io.amin.springbootkotlin
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
