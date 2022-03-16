@@ -1,5 +1,7 @@
 package io.amin.springbootkotlin.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.amin.springbootkotlin.model.Bank
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -12,13 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
 
 @SpringBootTest
 @AutoConfigureMockMvc
-internal class BankControllerTest {
-
-    @Autowired
-    lateinit var mockMvc: MockMvc
+internal class BankControllerTest @Autowired constructor(val mockMvc: MockMvc, val objectMapper: ObjectMapper){
 
     val baseUrl = "/api/banks"
 
@@ -77,6 +77,31 @@ internal class BankControllerTest {
                 }
         }
 
+    }
+    
+    @Nested
+    @DisplayName("POST /api/banks")
+    @TestInstance(Lifecycle.PER_CLASS)
+    inner class PostNewBank {
+    
+        @Test
+        fun `should add new bank`() {
+            // given
+            val newBank = Bank("222", 2.7, 29)
+
+            // when
+            val requestBody = mockMvc.post(baseUrl) {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(newBank)
+            }
+
+            // then
+            requestBody
+                .andDo { print() }
+                .andExpect { status { isCreated() } }
+
+        }
+        
     }
 
 }
