@@ -58,10 +58,23 @@ internal class BankControllerTest {
                 .andExpect {
                     status { isOk() }
                     content { contentType(MediaType.APPLICATION_JSON) }
-                    jsonPath("$.trust") { value(2.13) }
+                    jsonPath("$.trust") { value(0.13) }
                     jsonPath("$.transactionFee") { value(12) }
                 }
 
+        }
+        
+        @Test
+        fun `should return NOT FOUND if the account number does not exit`() {
+
+            val accountNumber = "does_not_exit"
+            
+            // when/then
+            mockMvc.get("$baseUrl/$accountNumber")
+                .andDo { print() }
+                .andExpect {
+                    status { isNotFound() }
+                }
         }
 
     }
