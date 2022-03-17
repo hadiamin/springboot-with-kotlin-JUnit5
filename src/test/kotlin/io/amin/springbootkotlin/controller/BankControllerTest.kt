@@ -98,7 +98,31 @@ internal class BankControllerTest @Autowired constructor(val mockMvc: MockMvc, v
             // then
             requestBody
                 .andDo { print() }
-                .andExpect { status { isCreated() } }
+                .andExpect {
+                    status { isCreated() }
+                    content { contentType(MediaType.APPLICATION_JSON) }
+                    jsonPath("$.accountNumber") { value("222") }
+                    jsonPath("$.trust") { value(2.7) }
+                    jsonPath("transactionFee") { value(29) }
+                }
+
+        }
+
+        @Test
+        fun `should return BAD REQUEST if bank already exit`() {
+            // given
+            val existingBank = Bank("1234", 2.3, 30)
+
+            // when
+            val requestBody = mockMvc.post(baseUrl) {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(existingBank)
+            }
+
+            // then
+            requestBody
+                .andDo { print() }
+                .andExpect { status { isBadRequest() } }
 
         }
         
