@@ -9,4 +9,8 @@ interface BankDataSource {
     fun retrieveBank(accountNumber: String): Bank
 
     fun createBank(newBank: Bank): Bank
+
+    fun patchBank(existingBank: Bank): Bank
+
+    fun deleteBank(accountNumber: String): Unit
 }

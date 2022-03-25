@@ -5,8 +5,10 @@ import io.amin.springbootkotlin.model.Bank
 import io.amin.springbootkotlin.service.BankService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -35,4 +37,11 @@ class BankController(private val bankService: BankService) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun addBank(@RequestBody newBank: Bank): Bank = bankService.addBank(newBank)
+
+    @PatchMapping
+    fun updateBank(@RequestBody existingBank: Bank): Bank = bankService.updateBank(existingBank)
+
+    @DeleteMapping("/{accountNumber}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteBank(@PathVariable accountNumber: String): Unit = bankService.deleteBank(accountNumber)
 }

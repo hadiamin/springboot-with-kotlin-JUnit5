@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository
 class MockBankDataSource: BankDataSource {
 
     private val banks = mutableListOf<Bank>(
-        Bank("1234", 2.13, 12),
-        Bank("1234", 3.30, 23),
-        Bank("1234", 1.23, 21),
-        Bank("1234", 1.30, 32),
+        Bank("123", 2.13, 12),
+        Bank("234", 3.30, 23),
+        Bank("134", 1.23, 21),
+        Bank("124", 1.30, 32),
         Bank("1234", 2.32, 22),
     )
 
@@ -30,5 +30,22 @@ class MockBankDataSource: BankDataSource {
         }
         banks.add(newBank)
         return newBank
+    }
+
+    override fun patchBank(existingBank: Bank): Bank {
+        val currentBank = banks.firstOrNull() { it.accountNumber == existingBank.accountNumber }
+            ?: throw NoSuchElementException("Bank with account number ${existingBank.accountNumber} already exit.")
+
+        banks.remove(currentBank)
+        banks.add(existingBank)
+
+        return existingBank
+    }
+
+    override fun deleteBank(accountNumber: String) {
+        val currentBank = banks.firstOrNull() { it.accountNumber == accountNumber }
+            ?: throw NoSuchElementException("Bank with account number $accountNumber does not exit.")
+
+        banks.remove(currentBank)
     }
 }
